@@ -11,7 +11,37 @@ class Despesa {
   element() {
     return this;
   }
+  validaDados() {
+    for (let i in this) {
+      if (this[i] === undefined || this[i] === "" || this[i] === null) {
+        return false;
+      }
+      return true;
+    }
+  }
 }
+class Bd {
+  constructor() {
+    let id = localStorage.getItem("id");
+    if (id === null) {
+      localStorage.setItem("id", 0);
+    }
+  }
+  getNextID() {
+    let nextID = localStorage.getItem("id");
+    return parseInt(nextID) + 1;
+  }
+  cadastrar(d) {
+    let id = this.getNextID();
+
+    localStorage.setItem(id, JSON.stringify(d));
+
+    localStorage.setItem("id", id);
+  }
+}
+
+let bd = new Bd();
+
 function cadastraDespesa() {
   let ano = document.getElementById("ano");
   let mes = document.getElementById("mes");
@@ -27,9 +57,10 @@ function cadastraDespesa() {
     desc.value,
     valor.value
   );
-  cadastrar(despesa);
+  if (despesa.validaDados()) {
+    bd.cadastrar(despesa);
+  } else {
+  }
 }
-function cadastrar(d) {
-  localStorage.setItem("despesa", JSON.stringify(d));
-}
+
 btnCadastro.addEventListener("click", cadastraDespesa);
